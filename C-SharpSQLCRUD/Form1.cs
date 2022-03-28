@@ -33,6 +33,7 @@ namespace C_SharpSQLCRUD
                 ItemName = itemname,
                 Design = design,
                 Color = color,
+                InsertDate = DateTime.Now,
                 ModifyDate = modifydate,
             };
             db.ProductInfos.InsertOnSubmit(st);
@@ -40,11 +41,50 @@ namespace C_SharpSQLCRUD
             MessageBox.Show("Successfully Inserted");
             loadData();
         }
-        //adding method to load data in datagridview
         void loadData()
         {
             var st = from s in db.ProductInfos select s;
             dataGridView1.DataSource = st;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            loadData();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string itemname = textBox2.Text, design = textBox3.Text, color = comboBox1.Text;
+            DateTime modifydate = DateTime.Parse(dateTimePicker1.Text);
+            var st = (from s in db.ProductInfos where 
+                      s.ProductID == int.Parse(textBox1.Text) select s).First();
+            st.ItemName = itemname;
+            st.Design = design;
+            st.Color = color;
+            st.ModifyDate = modifydate;
+            st.UpdateDate = DateTime.Now;
+            db.SubmitChanges();
+            MessageBox.Show("Update Successful");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var st = from s in db.ProductInfos where 
+                     s.ProductID == int.Parse(textBox1.Text) select s;
+            dataGridView1.DataSource = st;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("This cannot be undone, are you sure?", "Delete Record", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                var st = (from s in db.ProductInfos where 
+                      s.ProductID == int.Parse(textBox1.Text) select s).First();
+                db.ProductInfos.DeleteOnSubmit(st);
+                db.SubmitChanges();
+                MessageBox.Show("Record Deleted");
+                loadData();
+            }
         }
     }
 }
