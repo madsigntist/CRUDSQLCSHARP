@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace C_SharpSQLCRUD
 {
     public partial class Form1 : Form
@@ -56,8 +54,9 @@ namespace C_SharpSQLCRUD
         {
             string itemname = textBox2.Text, design = textBox3.Text, color = comboBox1.Text;
             DateTime modifydate = DateTime.Parse(dateTimePicker1.Text);
-            var st = (from s in db.ProductInfos where 
-                      s.ProductID == int.Parse(textBox1.Text) select s).First();
+            var st = (from s in db.ProductInfos
+                      where s.ProductID == int.Parse(textBox1.Text)
+                      select s).First();
             st.ItemName = itemname;
             st.Design = design;
             st.Color = color;
@@ -69,8 +68,9 @@ namespace C_SharpSQLCRUD
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var st = from s in db.ProductInfos where 
-                     s.ProductID == int.Parse(textBox1.Text) select s;
+            var st = from s in db.ProductInfos
+                     where s.ProductID == int.Parse(textBox1.Text)
+                     select s;
             dataGridView1.DataSource = st;
         }
 
@@ -78,8 +78,9 @@ namespace C_SharpSQLCRUD
         {
             if (MessageBox.Show("This cannot be undone, are you sure?", "Delete Record", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                var st = (from s in db.ProductInfos where 
-                      s.ProductID == int.Parse(textBox1.Text) select s).First();
+                var st = (from s in db.ProductInfos
+                          where s.ProductID == int.Parse(textBox1.Text)
+                          select s).First();
                 db.ProductInfos.DeleteOnSubmit(st);
                 db.SubmitChanges();
                 MessageBox.Show("Record Deleted");
